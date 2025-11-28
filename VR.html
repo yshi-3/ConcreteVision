@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Image Generator | Concrete Vision</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="index.js" defer></script>
-    <script src="server.js" defer></script>
-    <env src="key.env"></env>
+    <script src="image_generator.js" defer></script>
     <style>
         :root {
             --primary: #0A0A0A;
@@ -149,6 +147,28 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
+        .download-btn {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            color: var(--text);
+            background: var(--accent);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .error {
+            color: #ff9f9f;
+            margin-top: 1rem;
+        }
+
         .loading {
             display: none;
             font-size: 1.2rem;
@@ -181,7 +201,7 @@
             <div class="input-container">
                 <div class="input-group">
                     <input type="text" id="userInput" placeholder="Describe the image you want to generate...">
-                    <button onclick="generateImage()">Generate</button>
+                    <button type="button" onclick="generateImage()">Generate</button>
                 </div>
                 <div class="loading" id="loading">Generating your image...</div>
                 <div class="output-container" id="output">
@@ -193,44 +213,5 @@
     <footer>
         <p>&copy; 2024 Concrete Vision. All rights reserved.</p>
     </footer>
-
-    <script>
-        async function generateImage() {
-        const userInput = document.getElementById('userInput').value;
-        const loading = document.getElementById('loading');
-        const output = document.getElementById('output');
-
-        if (!userInput) {
-            alert('Please enter a description!');
-            return;
-        }
-
-        loading.style.display = 'block';
-        output.innerHTML = '';
-
-        try {
-            const response = await fetch('http://localhost:3000/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ prompt: userInput }),
-            });
-
-            const data = await response.json();
-
-            if (data.imageUrl) {
-                output.innerHTML = `<img src="${data.imageUrl}" alt="Generated Image">`;
-            } else {
-                output.innerHTML = '<p>Failed to generate image. Please try again.</p>';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            output.innerHTML = '<p>An error occurred. Please try again.</p>';
-        } finally {
-            loading.style.display = 'none';
-        }
-    }
-    </script>
 </body>
 </html>

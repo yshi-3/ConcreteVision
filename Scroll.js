@@ -1,12 +1,12 @@
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if(entry.isIntersecting) {
-            entry.target.classList.add('active');
+        if (entry.isIntersecting) {
+            entry.target.classList.add('section-visible');
         }
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.section').forEach((section) => {
+document.querySelectorAll('.section-hidden').forEach(section => {
     observer.observe(section);
 });
 
