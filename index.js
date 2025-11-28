@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingIndicator = document.getElementById('loading');
     const resultDiv = document.getElementById('result');
 
+    if (!generateBtn || !promptInput || !loadingIndicator || !resultDiv) {
+        return;
+    }
+
     generateBtn.addEventListener('click', generateImage);
 
     async function generateImage() {
@@ -28,10 +32,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                throw new Error(await response.text());
+                let message = `Request failed with status ${response.status}`;
+                try {
+                    const errorPayload = await response.json();
+                    if (errorPayload && errorPayload.error) {
+                        message = errorPayload.error;
+                    }
+                } catch (parseError) {
+                    // ignore parse errors
+                }
+                throw new Error(message);
             }
 
             const data = await response.json();
+            if (!data.image) {
+                throw new Error('Response did not include an image payload.');
+            }
             
             // Create and display image
             const img = document.createElement('img');
